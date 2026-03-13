@@ -1,0 +1,269 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="KumariCinemaSystem.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Kumari Cinemas Ticketing System</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --bg-color: #000000; /* Pure Black background */
+            --card-glass: rgba(15, 23, 42, 0.8);
+            --text-main: #ffffff; /* Pure White text */
+            --border-color: rgba(255, 255, 255, 0.15);
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', 'Inter', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .navbar-custom {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            padding: 0.8rem 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .navbar-brand {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-main) !important;
+            letter-spacing: 1px;
+        }
+        .navbar-brand span {
+            color: var(--primary);
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: var(--primary) !important;
+            transform: translateY(-1px);
+        }
+        .container.body-content {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 16px;
+            background: #0a0a0a; /* Slightly lighter than pure black for depth */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            border: 1px solid var(--border-color);
+            min-height: 85vh;
+        }
+        .form-control, .form-select {
+            background-color: #111111 !important;
+            border: 1px solid var(--border-color) !important;
+            color: white !important;
+            padding: 12px 15px;
+            border-radius: 8px;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #1a1a1a !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #4f46e5);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+            filter: brightness(1.1);
+        }
+        /* GridView / Table Styling */
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #050505;
+        }
+        .table {
+            color: #ffffff !important; /* Force white text */
+            margin-bottom: 0;
+            width: 100% !important;
+            border-collapse: collapse;
+        }
+        .table thead th {
+            background: #0d0d0d;
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            padding: 20px 15px;
+            border-bottom: 2px solid var(--primary);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+        .table tbody tr {
+            background-color: #000000;
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:nth-of-type(odd) {
+            background-color: #050505;
+        }
+        .table tbody td {
+            padding: 18px 15px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            color: rgba(255,255,255,0.95) !important;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.12) !important;
+            transform: scale(1.002);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        .text-info { color: #38bdf8 !important; }
+        .text-primary { color: #818cf8 !important; }
+        .card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        /* Premium Alert Message Styling */
+        .page-alert {
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            display: none;
+            border-left: 5px solid transparent;
+            backdrop-filter: blur(10px);
+            animation: slideInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .alert-success { 
+            background: rgba(16, 185, 129, 0.1); 
+            border: 1px solid rgba(16, 185, 129, 0.3); 
+            border-left-color: #10b981;
+            color: #34d399; 
+        }
+        .alert-danger { 
+            background: rgba(239, 68, 68, 0.1); 
+            border: 1px solid rgba(239, 68, 68, 0.3); 
+            border-left-color: #ef4444;
+            color: #f87171; 
+        }
+        @keyframes slideInDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* Edit Mode Styling */
+        .table input[type="text"], .table input[type="number"] {
+            background: #111827 !important;
+            border: 1px solid #334155 !important;
+            color: #ffffff !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            width: 100% !important;
+            font-size: 0.9rem !important;
+            transition: border-color 0.2s;
+        }
+        .table input[type="text"]:focus {
+            border-color: var(--primary) !important;
+            outline: none;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+            </Scripts>
+        </asp:ScriptManager>
+
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" runat="server" href="~/Pages/Dashboard.aspx">
+                    <i class="fas fa-film me-2 text-primary"></i>
+                    <span>Kumari</span>Cinemas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" runat="server" href="~/Pages/Dashboard.aspx">
+                                <i class="fas fa-columns me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="manageDrop" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-tasks me-1"></i> Manage
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-0">
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/Users.aspx"><i class="fas fa-users me-2"></i> Users</a></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/Movies.aspx"><i class="fas fa-video me-2"></i> Movies</a></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/TheatreCityHall.aspx"><i class="fas fa-building me-2"></i> Theaters & Halls</a></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/ShowTimes.aspx"><i class="fas fa-clock me-2"></i> Showtimes</a></li>
+                                <li><div class="dropdown-divider bg-secondary"></div></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/Booking.aspx"><i class="fas fa-ticket-alt me-2"></i> Bookings</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="reportsDrop" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-chart-pie me-1"></i> Reports
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-0">
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/UserTickets.aspx"><i class="fas fa-history me-2"></i> User Tickets</a></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/TheaterMovies.aspx"><i class="fas fa-list-alt me-2"></i> Theater Schedule</a></li>
+                                <li><a class="dropdown-item py-2" runat="server" href="~/Pages/Occupancy.aspx"><i class="fas fa-percentage me-2"></i> Occupancy Report</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container body-content mt-4">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        
+        </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
