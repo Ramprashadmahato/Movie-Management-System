@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,6 +15,10 @@ namespace KumariCinemaSystem.Pages
         public string MovieSales = "[]";
         public string TimelineLabels = "[]";
         public string TimelineSales = "[]";
+        public string GenreLabels = "[]";
+        public string GenreSales = "[]";
+        public string TheaterLabels = "[]";
+        public string TheaterRevenue = "[]";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -64,11 +68,56 @@ namespace KumariCinemaSystem.Pages
                         TimelineLabels = "[" + string.Join(",", tLabels) + "]";
                         TimelineSales = "[" + string.Join(",", tSales) + "]";
                     }
+                    // 3. Genre Data (Sales by Genre)
+                    DataTable dtGenre = DatabaseHelper.ExecuteQuery(@"
+                        SELECT m.Genre, COUNT(b.Booking_ID) as Sales
+                        FROM Booking b
+                        JOIN Show s ON b.Show_ID = s.Show_ID
+                        JOIN Movie m ON s.Movie_ID = m.Movie_ID
+                        GROUP BY m.Genre");
+
+                    var gLabels = new System.Collections.Generic.List<string>();
+                    var gSales = new System.Collections.Generic.List<string>();
+                    foreach (DataRow row in dtGenre.Rows)
+                    {
+                        string genre = row["Genre"].ToString();
+                        gLabels.Add("\"" + (string.IsNullOrEmpty(genre) ? "Unknown" : genre) + "\"");
+                        gSales.Add(row["Sales"].ToString());
+                    }
+                    if (gLabels.Count > 0)
+                    {
+                        GenreLabels = "[" + string.Join(",", gLabels) + "]";
+                        GenreSales = "[" + string.Join(",", gSales) + "]";
+                    }
+
+                    // 4. Theater Revenue Data
+                    DataTable dtTheater = DatabaseHelper.ExecuteQuery(@"
+                        SELECT t.TheatreName, SUM(s.TicketPrice) as Revenue
+                        FROM Booking b
+                        JOIN Show s ON b.Show_ID = s.Show_ID
+                        JOIN Hall h ON s.Hall_ID = h.Hall_ID
+                        JOIN Theatre t ON h.Theatre_ID = t.Theatre_ID
+                        GROUP BY t.TheatreName");
+
+                    var thLabels = new System.Collections.Generic.List<string>();
+                    var thRevenue = new System.Collections.Generic.List<string>();
+                    foreach (DataRow row in dtTheater.Rows)
+                    {
+                        thLabels.Add("\"" + row["TheatreName"].ToString() + "\"");
+                        thRevenue.Add(row["Revenue"].ToString());
+                    }
+                    if (thLabels.Count > 0)
+                    {
+                        TheaterLabels = "[" + string.Join(",", thLabels) + "]";
+                        TheaterRevenue = "[" + string.Join(",", thRevenue) + "]";
+                    }
                 }
                 catch (Exception)
                 {
                     MovieLabels = "['No Data']"; MovieSales = "[0]";
                     TimelineLabels = "['No Data']"; TimelineSales = "[0]";
+                    GenreLabels = "['No Data']"; GenreSales = "[0]";
+                    TheaterLabels = "['No Data']"; TheaterRevenue = "[0]";
                 }
             }
         }

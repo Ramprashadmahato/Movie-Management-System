@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Movies.aspx.cs" Inherits="KumariCinemaSystem.Pages.Movies"
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Movies.aspx.cs" Inherits="KumariCinemaSystem.Pages.Movies"
     MasterPageFile="~/Site.Master" %>
 
     <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -52,6 +52,7 @@
         </div>
 
         <!-- Movies List Section -->
+        <h4 class="text-white mb-3"><i class="fas fa-list me-2"></i>Fetched Movies List</h4>
         <div class="table-responsive">
             <asp:GridView ID="gvMovies" runat="server" AutoGenerateColumns="False" DataKeyNames="Movie_ID"
                 OnRowEditing="gvMovies_RowEditing" CssClass="table table-hover table-striped align-middle"

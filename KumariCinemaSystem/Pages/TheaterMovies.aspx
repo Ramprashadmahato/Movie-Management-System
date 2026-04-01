@@ -26,6 +26,7 @@
         </div>
 
         <!-- Results Section -->
+        <h4 class="text-white mb-3"><i class="fas fa-list me-2"></i>Fetched Theater Schedule List</h4>
         <div class="table-responsive">
             <asp:GridView ID="gvActiveSchedule" runat="server" AutoGenerateColumns="False"
                 CssClass="table table-hover table-striped align-middle border-secondary"

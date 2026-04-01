@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ShowTimes.aspx.cs"
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ShowTimes.aspx.cs"
     Inherits="KumariCinemaSystem.Pages.ShowTimes" MasterPageFile="~/Site.Master" %>
 
     <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -18,14 +18,14 @@
 
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label small text-uppercase text-muted fw-bold">Select Movie ID</label>
-                        <asp:TextBox ID="txtMovieID" runat="server" CssClass="form-control" placeholder="1">
-                        </asp:TextBox>
+                        <label class="form-label small text-uppercase text-muted fw-bold">Select Movie</label>
+                        <asp:DropDownList ID="ddlMovieID" runat="server" CssClass="form-select">
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small text-uppercase text-muted fw-bold">Select Hall ID</label>
-                        <asp:TextBox ID="txtHallID" runat="server" CssClass="form-control" placeholder="1">
-                        </asp:TextBox>
+                        <label class="form-label small text-uppercase text-muted fw-bold">Select Hall</label>
+                        <asp:DropDownList ID="ddlHallID" runat="server" CssClass="form-select">
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small text-uppercase text-muted fw-bold">Time Slot</label>
@@ -55,6 +55,7 @@
         </div>
 
         <!-- Showtimes List Section -->
+        <h4 class="text-white mb-3"><i class="fas fa-list me-2"></i>Fetched Showtimes List</h4>
         <div class="table-responsive">
             <asp:GridView ID="gvShowTimes" runat="server" AutoGenerateColumns="False"
                 DataKeyNames="Show_ID,Movie_ID,Hall_ID" OnRowEditing="gvShowTimes_RowEditing"

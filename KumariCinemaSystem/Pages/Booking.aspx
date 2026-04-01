@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Booking.aspx.cs" Inherits="KumariCinemaSystem.Pages.Booking"
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Booking.aspx.cs" Inherits="KumariCinemaSystem.Pages.Booking"
     MasterPageFile="~/Site.Master" %>
 
     <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -18,14 +18,14 @@
 
                 <div class="row g-3">
                     <div class="col-md-5">
-                        <label class="form-label small text-uppercase text-muted fw-bold">Select User ID</label>
-                        <asp:TextBox ID="txtUserID" runat="server" CssClass="form-control" placeholder="e.g. 1">
-                        </asp:TextBox>
+                        <label class="form-label small text-uppercase text-muted fw-bold">Select User</label>
+                        <asp:DropDownList ID="ddlUserID" runat="server" CssClass="form-select">
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-5">
-                        <label class="form-label small text-uppercase text-muted fw-bold">Select Show ID</label>
-                        <asp:TextBox ID="txtShowID" runat="server" CssClass="form-control" placeholder="e.g. 1">
-                        </asp:TextBox>
+                        <label class="form-label small text-uppercase text-muted fw-bold">Select Show</label>
+                        <asp:DropDownList ID="ddlShowID" runat="server" CssClass="form-select">
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <asp:Button ID="btnBook" runat="server" Text="Book Ticket"
@@ -36,6 +36,7 @@
             </div>
         </div>
 
+        <h4 class="text-white mb-3"><i class="fas fa-list me-2"></i>Fetched Bookings List</h4>
         <div class="table-responsive">
             <asp:GridView ID="gvBookings" runat="server" AutoGenerateColumns="False" DataKeyNames="Booking_ID"
                 CssClass="table table-hover table-striped align-middle" OnRowDeleting="gvBookings_RowDeleting"

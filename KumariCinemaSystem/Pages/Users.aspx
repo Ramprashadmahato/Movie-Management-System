@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Users.aspx.cs" Inherits="KumariCinemaSystem.Pages.Users"
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Users.aspx.cs" Inherits="KumariCinemaSystem.Pages.Users"
     MasterPageFile="~/Site.Master" %>
 
     <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -36,6 +36,7 @@
             </div>
         </div>
 
+        <h4 class="text-white mb-3"><i class="fas fa-list me-2"></i>Fetched Users List</h4>
         <div class="table-responsive">
             <asp:GridView ID="gvUsers" runat="server" AutoGenerateColumns="False" DataKeyNames="User_ID"
                 OnRowEditing="gvUsers_RowEditing" CssClass="table table-hover table-striped align-middle"

@@ -1,4 +1,4 @@
-﻿using KumariCinemas.DAL;
+using KumariCinemas.DAL;
 using System;
 using System.Data;
 using System.Linq;
@@ -12,7 +12,52 @@ namespace KumariCinemaSystem.Pages
         {
             if (!IsPostBack)
             {
+                BindMovies();
+                BindHalls();
                 BindShowTimes();
+            }
+        }
+
+        private void BindMovies()
+        {
+            try {
+                string query = "SELECT Movie_ID, MovieTitle FROM Movie ORDER BY MovieTitle";
+                DataTable dt = DatabaseHelper.ExecuteQuery(query);
+                ddlMovieID.DataSource = dt;
+                ddlMovieID.DataTextField = "MovieTitle";
+                ddlMovieID.DataValueField = "Movie_ID";
+                ddlMovieID.DataBind();
+                ddlMovieID.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Select Movie --", "0"));
+            } catch (Exception) {
+                ddlMovieID.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Error loading movies", "0"));
+            }
+        }
+
+        private void BindHalls()
+        {
+            try {
+                string query = @"SELECT h.Hall_ID, t.TheatreName || ' - Hall ' || TO_CHAR(h.Hall_ID) AS HallName 
+                                FROM Hall h 
+                                JOIN Theatre t ON h.Theatre_ID = t.Theatre_ID 
+                                ORDER BY t.TheatreName, h.Hall_ID";
+                DataTable dt = DatabaseHelper.ExecuteQuery(query);
+                ddlHallID.DataSource = dt;
+                ddlHallID.DataTextField = "HallName";
+                ddlHallID.DataValueField = "Hall_ID";
+                ddlHallID.DataBind();
+                ddlHallID.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Select Hall --", "0"));
+            } catch (Exception) {
+                // fallback
+                try {
+                    DataTable dt2 = DatabaseHelper.ExecuteQuery("SELECT Hall_ID, 'Hall ' || TO_CHAR(Hall_ID) AS HallName FROM Hall");
+                    ddlHallID.DataSource = dt2;
+                    ddlHallID.DataTextField = "HallName";
+                    ddlHallID.DataValueField = "Hall_ID";
+                    ddlHallID.DataBind();
+                    ddlHallID.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Select Hall --", "0"));
+                } catch {
+                    ddlHallID.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Error loading halls", "0"));
+                }
             }
         }
 
@@ -39,11 +84,11 @@ namespace KumariCinemaSystem.Pages
         protected void btnAddShow_Click(object sender, EventArgs e)
         {
             try {
-                if (string.IsNullOrWhiteSpace(txtMovieID.Text)) {
+                if (ddlMovieID.SelectedValue == "0") {
                     ShowMessage("Schedule Error: Please specify which Movie is being shown.", "danger");
                     return;
                 }
-                if (string.IsNullOrWhiteSpace(txtHallID.Text)) {
+                if (ddlHallID.SelectedValue == "0") {
                     ShowMessage("Schedule Error: No Theater Hall selected for this show.", "danger");
                     return;
                 }
@@ -58,7 +103,7 @@ namespace KumariCinemaSystem.Pages
 
                 string query = $@"INSERT INTO Show (Show_ID, Movie_ID, Hall_ID, ShowTime, ShowDate, TicketPrice) 
                                  VALUES ((SELECT NVL(MAX(Show_ID), 0) + 1 FROM Show), 
-                                 {txtMovieID.Text}, {txtHallID.Text}, '{ddlShowTime.SelectedValue}', 
+                                 {ddlMovieID.SelectedValue}, {ddlHallID.SelectedValue}, '{ddlShowTime.SelectedValue}', 
                                  TO_DATE('{txtShowDate.Text}', 'YYYY-MM-DD'), {txtPrice.Text})";
                 DatabaseHelper.ExecuteNonQuery(query);
                 ShowMessage("Success: Movie showtime successfully scheduled and published!", "success");
@@ -71,8 +116,8 @@ namespace KumariCinemaSystem.Pages
 
         private void ClearFields()
         {
-            txtMovieID.Text = "";
-            txtHallID.Text = "";
+            ddlMovieID.SelectedIndex = 0;
+            ddlHallID.SelectedIndex = 0;
             txtShowDate.Text = "";
             txtPrice.Text = "";
         }

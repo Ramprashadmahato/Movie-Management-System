@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs"
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs"
     Inherits="KumariCinemaSystem.Pages.Dashboard" MasterPageFile="~/Site.Master" %>
 
     <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -66,7 +66,8 @@
 
         <!-- Analytics Graph Section -->
         <div class="row mb-5 g-4">
-            <div class="col-lg-7">
+            <!-- 1. Top Movie Sales -->
+            <div class="col-lg-6">
                 <div class="card h-100"
                     style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
                     <div class="card-header bg-transparent border-bottom border-secondary py-3">
@@ -77,7 +78,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <!-- 2. Sales Timeline -->
+            <div class="col-lg-6">
                 <div class="card h-100"
                     style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
                     <div class="card-header bg-transparent border-bottom border-secondary py-3">
@@ -85,6 +87,30 @@
                     </div>
                     <div class="card-body p-4" style="min-height: 350px;">
                         <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- 3. Sales by Genre -->
+            <div class="col-lg-6">
+                <div class="card h-100"
+                    style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h5 class="m-0 text-warning"><i class="fas fa-chart-pie me-2"></i> Ticket Sales by Genre</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex justify-content-center align-items-center" style="min-height: 350px;">
+                        <canvas id="genreChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- 4. Revenue by Theater -->
+            <div class="col-lg-6">
+                <div class="card h-100"
+                    style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h5 class="m-0 text-success"><i class="fas fa-hand-holding-usd me-2"></i> Revenue by Theater</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex justify-content-center align-items-center" style="min-height: 350px;">
+                        <canvas id="theaterChart" style="max-height: 300px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -145,6 +171,62 @@
                 }
             }
                 });
+
+            // 3. Sales by Genre Pie Chart
+            const genreCtx = document.getElementById('genreChart').getContext('2d');
+            new Chart(genreCtx, {
+                type: 'pie',
+                data: {
+                    labels: <%= GenreLabels %>,
+                    datasets: [{
+                        data: <%= GenreSales %>,
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(56, 189, 248, 0.8)'
+                        ],
+                        borderWidth: 1,
+                        borderColor: '#0f172a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#e2e8f0' } }
+                    }
+                }
+            });
+
+            // 4. Revenue by Theater Doughnut Chart
+            const theaterCtx = document.getElementById('theaterChart').getContext('2d');
+            new Chart(theaterCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: <%= TheaterLabels %>,
+                    datasets: [{
+                        data: <%= TheaterRevenue %>,
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(56, 189, 248, 0.8)',
+                            'rgba(168, 85, 247, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderWidth: 1,
+                        borderColor: '#0f172a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#e2e8f0' } }
+                    }
+                }
+            });
             });
         </script>
 
